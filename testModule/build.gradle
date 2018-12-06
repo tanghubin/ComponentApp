@@ -1,0 +1,51 @@
+if (test_module_isApp.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion compile_sdk_version.toInteger()
+
+    defaultConfig {
+        if (test_module_isApp.toBoolean()) {
+            applicationId "com.module.test"
+        }
+        minSdkVersion min_sdk_version.toInteger()
+        targetSdkVersion target_sdk_version.toInteger()
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    sourceSets {
+        main {
+            if (test_module_isApp.toBoolean()) {
+                manifest.srcFile "src/main/manifest/AndroidManifest.xml"
+            } else {
+                manifest.srcFile "src/main/AndroidManifest.xml"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "com.android.support:appcompat-v7:$suppor_version"
+    api "com.android.support.constraint:$constraint_layout"
+    api project(':baseLib')
+}
